@@ -17,11 +17,15 @@ for band in bands:
     steps = mi_band.get_steps()
     print('\nSteps :: ', steps)
 
+    # Battery
     battery = mi_band.get_battery_info()
-    print('\nBattery :: status: {}, level: {}  '.format(battery['status'], battery['level']))
+    print('Battery :: status: {}, level: {}  '.format(battery['status'], battery['level']))
 
     heart = mi_band.get_heart_rate_one_time()
-    print('\nHeart :: ', heart)
+    print('Heart :: ', heart)
+
+    # heart = mi_band.get_heart_rate_one_time()
+    # print('\nHeart :: ', heart)
 
     mi_band.disconnect()
 

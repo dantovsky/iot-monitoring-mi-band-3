@@ -59,6 +59,11 @@ Device ce:66:3c:61:74:19 (random), RSSI=-53 dB
 sudo systemctl restart bluetooth
 ```
 
+## Fontes
+
+- Wrapper python script for Xiaomi Mi Band 3 and Mi Band 4  
+https://github.com/mkborisov/mi-band-linux-wrapper
+
 ## Anotações
 
 Minha Mi Band 3: 'ce:66:3c:61:74:19'

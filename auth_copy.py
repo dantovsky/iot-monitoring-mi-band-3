@@ -228,16 +228,7 @@ class MiBand3(Peripheral):
 
     ### Precisa deste
     def get_battery_info(self):
-        char = self.svc_1.getCharacteristics(UUIDS.CHARACTERISTIC_BATTERY)[0]
-
-        print('\n----- CHAR :: ', char)
-        print('\n----- CHAR.READ :: ', char.read())
-        print('\n----- CHAR.READ[0] :: ', char.read()[0])
-        print('\n----- CHAR.READ[1] :: ', char.read()[1])
-        print('\n----- CHAR.READ[2] :: ', char.read()[2])
-        print('\n----- typeOf(CHAR) :: ', type(char))
-        print('\n----- typeOf(CHAR.READ) :: ', type(char.read()))
-        
+        char = self.svc_1.getCharacteristics(UUIDS.CHARACTERISTIC_BATTERY)[0]        
         return self._parse_battery_response(char.read())
 
     def get_current_time(self):
@@ -309,12 +300,15 @@ class MiBand3(Peripheral):
         
         num = 0
         while not res:
-            print(num)
+            # print(num)
             num = num + 1
             self.waitForNotifications(self.timeout)
             res = self._get_from_queue(QUEUE_TYPES.HEART)
 
-        print('Saiu do while...')
+            if (num >= 5): # Forçar a saída do loop
+                self._char_heart_ctrl.write(b'\x15\x02\x00', True)  # stop manual                
+
+        # print('Saiu do while...')
 
         rate = struct.unpack('bb', res)[1]
 

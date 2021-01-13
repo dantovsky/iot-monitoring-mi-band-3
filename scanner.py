@@ -1,5 +1,6 @@
 from bluepy.btle import Scanner, DefaultDelegate
 
+# Resource of this base code
 # https://ianharvey.github.io/bluepy-doc/scanner.html
 
 class ScanDelegate(DefaultDelegate):
@@ -15,7 +16,7 @@ class ScanDelegate(DefaultDelegate):
             
 
 def getMiBand():
-    print ('\nScannig for Mi Bands 3 devices...n')
+    print ('\nScannig for Mi Bands 3 devices...\n')
     scanner = Scanner().withDelegate(ScanDelegate())
     devices = scanner.scan(5.0)
 
@@ -25,11 +26,10 @@ def getMiBand():
         for (adtype, desc, value) in dev.getScanData():
             if value == 'Mi Band 3':
                 mibandsAround.append(dev.addr)
-        print("")
 
-    if len(mibandsAround): # elif len(mibands_from_file) and len(mibandsAround) and mibands_from_file[0] == mibandsAround[0]:
-        print('{} Mi Band 3 discovered!'.format(len(mibandsAround)))
+    if len(mibandsAround):
+        print('\n» {} Mi Band 3 discovered!'.format(len(mibandsAround)))
     else:
-        print('No Mi Band 3 not detected... Try again!')
+        print('No Mi Band 3 detected... Try again!')
     
     return mibandsAround

@@ -5,7 +5,7 @@ from datetime import datetime
 from Crypto.Cipher import AES
 from queue import Queue, Empty
 from bluepy.btle import Peripheral, DefaultDelegate, ADDR_TYPE_RANDOM, BTLEException
-#import crc16
+# import crc16
 import os
 import struct
 
@@ -58,7 +58,7 @@ class MiBand3(Peripheral):
     _send_rnd_cmd = struct.pack('<2s', b'\x02\x08')
     _send_enc_key = struct.pack('<2s', b'\x03\x08')
 
-    def __init__(self, mac_address, timeout=1, debug=False):
+    def __init__(self, mac_address, timeout=0.5, debug=True):
         FORMAT = '%(asctime)-15s %(name)s (%(levelname)s) > %(message)s'
         logging.basicConfig(format=FORMAT)
         log_level = logging.WARNING if not debug else logging.DEBUG
@@ -143,7 +143,7 @@ class MiBand3(Peripheral):
         month = bytes[2] if len(bytes) >= 3 else None
         day = bytes[3] if len(bytes) >= 4 else None
         hours = bytes[4] if len(bytes) >= 5 else None
-        minutes =bytes[5] if len(bytes) >= 6 else None
+        minutes = bytes[5] if len(bytes) >= 6 else None
         seconds = bytes[6] if len(bytes) >= 7 else None
         day_of_week = bytes[7] if len(bytes) >= 8 else None
         fractions256 = bytes[8] if len(bytes) >= 9 else None
@@ -153,7 +153,7 @@ class MiBand3(Peripheral):
     def _parse_battery_response(self, bytes):
         level = bytes[1] if len(bytes) >= 2 else None
         last_level = bytes[19] if len(bytes) >= 20 else None
-        status = "normal" if bytes[2] == 0 else "charging"
+        status = 'normal' if bytes[2] == 0 else "charging"
         datetime_last_charge = self._parse_date(bytes[11:18])
         datetime_last_off = self._parse_date(bytes[3:10])
 
@@ -226,8 +226,9 @@ class MiBand3(Peripheral):
             self._log.error(self.state)
             return False
 
+    ### Precisa deste
     def get_battery_info(self):
-        char = self.svc_1.getCharacteristics(UUIDS.CHARACTERISTIC_BATTERY)[0]
+        char = self.svc_1.getCharacteristics(UUIDS.CHARACTERISTIC_BATTERY)[0]        
         return self._parse_battery_response(char.read())
 
     def get_current_time(self):
@@ -272,6 +273,7 @@ class MiBand3(Peripheral):
         serial = struct.unpack('12s', data[-12:])[0] if len(data) == 12 else None
         return serial
 
+    # Using for TCIC project - Counting the steps from Mi Band 3
     def get_steps(self):
         char = self.svc_1.getCharacteristics(UUIDS.CHARACTERISTIC_STEPS)[0]
         a = char.read()
@@ -279,13 +281,38 @@ class MiBand3(Peripheral):
         meters = struct.unpack('h', a[5:7])[0] if len(a) >= 7 else None
         fat_gramms = struct.unpack('h', a[2:4])[0] if len(a) >= 4 else None
         # why only 1 byte??
-        callories = a[9] if len(a) >= 3 else None
-        #callories = struct.unpack('b', a[9])[0] if len(a) >= 10 else None
+        # callories = struct.unpack('b', a[9])[0] if len(a) >= 10 else None # This code with struct.unpack crashes (it is waiting for a Byte, but returns int)
+        callories = a[9] if len(a) >= 3 else None # New implementation to avoid crash the program
         return {
             "steps": steps,
             "meters": meters,
             "fat_gramms": fat_gramms,
             "callories": callories
+        }
+
+    # Using for TCIC project - Reading heart rate in real time
+    def get_heart_rate_one_time(self):
+        self._char_heart_ctrl.write(b'\x15\x01\x00', True) # stop continous
+        self._char_heart_ctrl.write(b'\x15\x02\x00', True) # stop manual
+        self._char_heart_ctrl.write(b'\x15\x02\x01', True) # start manual
+        
+        res = None
+        numCicle = 0
+        securyLimitCicle = 35
+        print ('\nReading heart rate')
+        while not res:
+            self.waitForNotifications(self.timeout)
+            res = self._get_from_queue(QUEUE_TYPES.HEART)
+
+            # Condition to avoid infinite loop
+            numCicle = numCicle + 1
+            if (numCicle >= securyLimitCicle):
+                self._char_heart_ctrl.write(b'\x15\x02\x00', True)  # stop manual                
+
+        rate = struct.unpack('bb', res)[1]
+
+        return {
+            "heart_rate": rate
         }
 
     def send_alert(self, _type):
@@ -327,6 +354,7 @@ class MiBand3(Peripheral):
         # print(write_val)
         char.write('\xe2\x07\x01\x1e\x00\x00\x00\x00\x00\x00\x16', withResponse=True)
         raw_input('Date Changed, press any key to continue')
+
     def dfuUpdate(self, fileName):
         print('Update Firmware/Resource')
         svc = self.getServiceByUUID(UUIDS.SERVICE_DFU_FIRMWARE)
@@ -377,6 +405,7 @@ class MiBand3(Peripheral):
             char.write('\x05', withResponse=True)
         print('Update Complete')
         raw_input('Press Enter to Continue')
+
     def start_raw_data_realtime(self, heart_measure_callback=None, heart_raw_callback=None, accel_raw_callback=None):
             char_m = self.svc_heart.getCharacteristics(UUIDS.CHARACTERISTIC_HEART_RATE_MEASURE)[0]
             char_d = char_m.getDescriptors(forUUID=UUIDS.NOTIFICATION_DESCRIPTOR)[0]
@@ -451,19 +480,24 @@ class MiBand3(Peripheral):
             self._char_fetch.write(trigger, False)
             self.active = True
 
-    def get_heart_rate_one_time(self):
-        self._char_heart_ctrl.write(b'\x15\x01\x00', True) # stop continous
-        self._char_heart_ctrl.write(b'\x15\x02\x00', True) # stop manual
-        self._char_heart_ctrl.write(b'\x15\x02\x01', True) # start manual
-        
-        res = None
-        
-        while not res:
-            self.waitForNotifications(self.timeout)
-            res = self._get_from_queue(QUEUE_TYPES.HEART)
 
-        rate = struct.unpack('bb', res)[1]
+'''
+def _parse_date(self, bytes):
+        year = struct.unpack('h', bytes[0:2])[0] if len(bytes) >= 2 else None
+        month = struct.unpack('b', bytes[2])[0] if len(bytes) >= 3 else None
+        day = struct.unpack('b', bytes[3])[0] if len(bytes) >= 4 else None
+        hours = struct.unpack('b', bytes[4])[0] if len(bytes) >= 5 else None
+        minutes = struct.unpack('b', bytes[5])[0] if len(bytes) >= 6 else None
+        seconds = struct.unpack('b', bytes[6])[0] if len(bytes) >= 7 else None
+        day_of_week = struct.unpack('b', bytes[7])[0] if len(bytes) >= 8 else None
+        fractions256 = struct.unpack('b', bytes[8])[0] if len(bytes) >= 9 else None
 
-        return {
-            "heart_rate": rate
-        }
+        return {"date": datetime(*(year, month, day, hours, minutes, seconds)), "day_of_week": day_of_week, "fractions256": fractions256}
+
+    def _parse_battery_response(self, bytes):
+        level = struct.unpack('i', bytes[1])[0] if len(bytes) >= 2 else None
+        last_level = struct.unpack('b', bytes[19])[0] if len(bytes) >= 20 else None
+        status = 'normal' if struct.unpack('b', bytes[2])[0] == 0 else "charging"
+        datetime_last_charge = self._parse_date(bytes[11:18])
+        datetime_last_off = self._parse_date(bytes[3:10])
+'''

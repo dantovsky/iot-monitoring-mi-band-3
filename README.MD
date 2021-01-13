@@ -1,11 +1,10 @@
 # IoT Project » Bluetooth BLE
 
-Desenvolvimentos de uma solução de IoT para a monitorização das atividades de uma pulseira Mi Band 3.
+Desenvolvimento de uma solução de IoT para a monitorização das atividades de uma pulseira Mi Band 3.
 - Monitorizar número de passos.
 - Monitorizar a bateria.
 - Monitorizar batimentos cardíacos.
 - Estabelecimento de mecanismos de poupança de bateria.
-
 
 ## Tasks
 
@@ -14,8 +13,11 @@ Desenvolvimentos de uma solução de IoT para a monitorização das atividades d
     - Número de passos.
     - Nível da bateria.
     - Batimento cardíaco.
-- MOM
-- Impementar um servidor de GATT (o que vai ler a pulseira: gatway) completo (os sensores de serviços diferentes devem ser implementados como características independentes de serviços independentes)
+- MOM :: RabbitMQ (?)
+- Impementar um servidor de GATT (o que vai ler a pulseira: gatway) completo (os sensores de serviços diferentes devem ser implementados como características independentes de serviços independentes) :: meu PC
+
+Falta:
+while infinito
 
 ## Install dependencies
 ```
@@ -27,7 +29,7 @@ pip install -r requirements.txt
 pip install bluepy  
 https://pypi.org/project/bluepy/
 
-- pip install pycryptodomex (Use: from Cryptodome.Cipher import AES)
+- pip install pycryptodomex (How to use: from Cryptodome.Cipher import AES)
 
 ## How to run the project
 
@@ -36,21 +38,16 @@ sudo python3 scanner.py
 ```
 
 ## Possible my Mi Band 3
-```
-Device ce:66:3c:61:74:19 (random), RSSI=-53 dB
- Flags = 06
- Manufacturer = 5701006130ba7b79e7b87970a2af426955b75d01ce663c617419
- Complete Local Name = Mi Band 3
- Incomplete 16b Services = 0000fee0-0000-1000-8000-00805f9b34fb
- ```
+
+- e8:9e:71:e1:c6:eb
+- ce:66:3c:61:74:19
 
 ## Tarefas a fazer
+
 - Thread que faça o Scanner (transpor o código do Scan para dentro de uma Thread)
 - É possivel le-la? Então lê e realiza utiliza uma MOM para manipular os dados
-    MOM: message oriented mid
+    MOM: message oriented middleware
 
-## Próxima aula
-- Mecanismos de envio de mensagens
 
 ## Utilizades
 
@@ -58,11 +55,23 @@ Device ce:66:3c:61:74:19 (random), RSSI=-53 dB
 ```
 sudo systemctl restart bluetooth
 ```
+## Infos e configs úteis para o RabbitMQ
+
+- Endereço: localhost:15672
+- Ver status: service rabbitmq-server status
+- restart dserver: service rabbitmq-server restart
+- Habilitar RabbitMQ Management: sudo rabbitmq-plugins enable rabbitmq_management
+- Adicionar novo user: sudo rabbitmqctl add_user <login_name> <password>
+- Setar o user como admin: sudo rabbitmqctl set_user_tags dantiii administrator
+- Listing queues for vhost: sudo rabbitmqctl list_queues
 
 ## Fontes
 
 - Wrapper python script for Xiaomi Mi Band 3 and Mi Band 4  
 https://github.com/mkborisov/mi-band-linux-wrapper
+
+- Timer para loop infinito  
+https://www.geeksforgeeks.org/how-to-create-a-countdown-timer-using-python/
 
 ## Anotações
 

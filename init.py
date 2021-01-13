@@ -1,42 +1,78 @@
 from scanner import getMiBand
-from auth_copy import MiBand3
+from auth import MiBand3
+import rabbitmq
+import time
+
+# Object instatiation
+rabbit = rabbitmq.RabbitMQ()
 
 # ler as mi bands
 # print('\nA Band existente é: ' + getMiBand())
+
+# Variables
 bands = getMiBand()
+rabbit_messages = {}
+
+print('\n» Getting data from Mi Band 3...')
 
 # loop das pulseiras
 # para cada pulseiras no array, ler as características exidigas
-for band in bands:
-    print('BAND :: ' + band)
-    mi_band = MiBand3(band, debug=True)
-    mi_band.setSecurityLevel(level='medium') # medium
-    mi_band.authenticate()
+def countdown(t):
+    while t: 
+        mins, secs = divmod(t, 60) 
+        timer = '{:02d}:{:02d}'.format(mins, secs) 
+        print(timer, end="\r") 
+        time.sleep(1) 
+        t -= 1
 
-    # Steps
-    steps = mi_band.get_steps()
-    print('\nSteps :: ', steps)
+while True:
+    for band in bands:
+        print('Mi Band with MAC Address ' + band + '\n')
+        mi_band = MiBand3(band, debug=True)
+        mi_band.setSecurityLevel(level='medium') # medium
+        mi_band.authenticate()
 
-    # Battery
-    battery = mi_band.get_battery_info()
-    print('Battery :: status: {}, level: {}  '.format(battery['status'], battery['level']))
+        # Steps
+        steps = mi_band.get_steps()
+        rabbit_messages['steps'] = steps
+        print('\nSteps :: ', steps)
 
-    heart = mi_band.get_heart_rate_one_time()
-    print('Heart :: ', heart)
+        # Battery
+        battery = mi_band.get_battery_info()
+        rabbit_messages['battery'] = battery
+        print('Battery :: status: {}, level: {}  '.format(battery['status'], battery['level']))
 
-    # heart = mi_band.get_heart_rate_one_time()
-    # print('\nHeart :: ', heart)
+        print('\n» Getting heart in real time. Please use your Mi Band 3 and wait for a while...')
 
-    mi_band.disconnect()
+        # Heart Rate
+        heart = mi_band.get_heart_rate_one_time()
+        rabbit_messages['heart'] = heart
+        print('Heart :: ', heart)
 
+        mi_band.disconnect()
 
+        # Send message to RabbitMQ
+        rabbit.connection_rabbitmq()
+        for queue, msg in rabbit_messages.items():
+            # print(queue, ' -> ', str(msg))
+            # print('type of :: ', type(str(msg)))
+            rabbit.queue_declare(queue)
+            rabbit.send(queue, str(msg))
 
-    # band = MiBand3(MAC_ADDR, debug=True) # Get :: steps, battery, heart
-    # band.setSecurityLevel(level = "medium")
+        rabbit.connectionClose()
 
-    # Instanciar obj Band
-    # fazer os gets
+        countdown(120)
 
-    # Enviar para o MQTT
+        # band = MiBand3(MAC_ADDR, debug=True) # Get :: steps, battery, heart
+        # band.setSecurityLevel(level = "medium")
 
-# Coloca mi_band.disconnect()  depois de ler
+        # Instanciar obj Band
+        # fazer os gets
+
+        # Enviar para o MQTT
+
+'''
+Exemplo da balança -> para o Mosquitto mas adaptável para o Rabbit
+
+'''
+

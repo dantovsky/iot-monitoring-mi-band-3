@@ -11,6 +11,7 @@ import struct
 
 from constants import UUIDS, AUTH_STATES, ALERT_TYPES, QUEUE_TYPES
 
+# Code from https://github.com/mkborisov/mi-band-linux-wrapper
 
 class AuthenticationDelegate(DefaultDelegate):
 
@@ -479,25 +480,3 @@ class MiBand3(Peripheral):
             trigger = b'\x01\x01' + ts + b'\x00\x08'
             self._char_fetch.write(trigger, False)
             self.active = True
-
-
-'''
-def _parse_date(self, bytes):
-        year = struct.unpack('h', bytes[0:2])[0] if len(bytes) >= 2 else None
-        month = struct.unpack('b', bytes[2])[0] if len(bytes) >= 3 else None
-        day = struct.unpack('b', bytes[3])[0] if len(bytes) >= 4 else None
-        hours = struct.unpack('b', bytes[4])[0] if len(bytes) >= 5 else None
-        minutes = struct.unpack('b', bytes[5])[0] if len(bytes) >= 6 else None
-        seconds = struct.unpack('b', bytes[6])[0] if len(bytes) >= 7 else None
-        day_of_week = struct.unpack('b', bytes[7])[0] if len(bytes) >= 8 else None
-        fractions256 = struct.unpack('b', bytes[8])[0] if len(bytes) >= 9 else None
-
-        return {"date": datetime(*(year, month, day, hours, minutes, seconds)), "day_of_week": day_of_week, "fractions256": fractions256}
-
-    def _parse_battery_response(self, bytes):
-        level = struct.unpack('i', bytes[1])[0] if len(bytes) >= 2 else None
-        last_level = struct.unpack('b', bytes[19])[0] if len(bytes) >= 20 else None
-        status = 'normal' if struct.unpack('b', bytes[2])[0] == 0 else "charging"
-        datetime_last_charge = self._parse_date(bytes[11:18])
-        datetime_last_off = self._parse_date(bytes[3:10])
-'''

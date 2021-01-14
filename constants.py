@@ -1,5 +1,6 @@
 ___all__ = ['UUIDS']
 
+# Code from https://github.com/mkborisov/mi-band-linux-wrapper
 
 class Immutable(type):
 

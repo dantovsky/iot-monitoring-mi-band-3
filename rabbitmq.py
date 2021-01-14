@@ -33,9 +33,9 @@ class RabbitMQ:
         print('RabbitMQ connection closed.')
 
     
-    # ----------------------------------------------------- #
-    # IMPLEMETNTATIONS NOT NECESSARY (RECEIVE MODE ONLY)    #
-    # ----------------------------------------------------- #
+    # ------------------------------------------------------ #
+    # IMPLEMETNTATIONS NOT NECESSARY (FOR RECEIVE MODE ONLY) #
+    # ------------------------------------------------------ #
 
 
     # def callback(ch, method, properties, body):

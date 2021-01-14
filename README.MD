@@ -1,10 +1,14 @@
-# IoT Project » Bluetooth BLE
+# IoT Mini Project » Bluetooth BLE
+
+![IoT Mini Project » Bluetooth BLE - RabbitMQ Overview](images/rabbit-overview.png)
 
 Desenvolvimento de uma solução de IoT para a monitorização das atividades de uma pulseira Mi Band 3.
 - Monitorizar número de passos.
 - Monitorizar a bateria.
 - Monitorizar batimentos cardíacos.
 - Estabelecimento de mecanismos de poupança de bateria.
+
+![IoT Mini Project » Bluetooth BLE - RabbitMQ Queues](images/rabbit-queues.png)
 
 ## Tasks
 
@@ -15,26 +19,17 @@ Desenvolvimento de uma solução de IoT para a monitorização das atividades de
     - Batimento cardíaco.
 - MOM :: RabbitMQ (?)
 - Impementar um servidor de GATT (o que vai ler a pulseira: gatway) completo (os sensores de serviços diferentes devem ser implementados como características independentes de serviços independentes) :: meu PC
-
-Falta:
-while infinito
+- Implementar scanner contínuo
 
 ## Install dependencies
 ```
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
-## Description dependency libraries
-
-- bluepy 1.3.0  
-pip install bluepy  
-https://pypi.org/project/bluepy/
-
-- pip install pycryptodomex (How to use: from Cryptodome.Cipher import AES)
 
 ## How to run the project
 
 ```
-sudo python3 scanner.py
+sudo python3 main.py
 ```
 
 ## Possible my Mi Band 3
@@ -55,6 +50,7 @@ sudo python3 scanner.py
 ```
 sudo systemctl restart bluetooth
 ```
+
 ## Infos e configs úteis para o RabbitMQ
 
 - Endereço: localhost:15672
@@ -72,6 +68,14 @@ https://github.com/mkborisov/mi-band-linux-wrapper
 
 - Timer para loop infinito  
 https://www.geeksforgeeks.org/how-to-create-a-countdown-timer-using-python/
+
+## Description dependency libraries
+
+- bluepy 1.3.0  
+pip3 install bluepy  
+https://pypi.org/project/bluepy/
+
+- pip install pycryptodomex (How to use: from Cryptodome.Cipher import AES)
 
 ## Anotações
 

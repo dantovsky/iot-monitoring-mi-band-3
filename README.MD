@@ -10,6 +10,10 @@ Desenvolvimento de uma solução de IoT para a monitorização das atividades de
 
 ![IoT Mini Project » Bluetooth BLE - RabbitMQ Queues](images/rabbit-queues.png)
 
+## Arquitetura do projeto
+
+![Arquitetura do projeto](images/diagrama-iot-project.png)
+
 ## Tasks
 
 - Ler as Mi Band 3 presentes, através do Scanner.
@@ -17,9 +21,9 @@ Desenvolvimento de uma solução de IoT para a monitorização das atividades de
     - Número de passos.
     - Nível da bateria.
     - Batimento cardíaco.
-- MOM :: RabbitMQ (?)
-- Impementar um servidor de GATT (o que vai ler a pulseira: gatway) completo (os sensores de serviços diferentes devem ser implementados como características independentes de serviços independentes) :: meu PC
-- Implementar scanner contínuo
+- MOM :: RabbitMQ.
+- Impementar um servidor de GATT (o que vai ler a pulseira: gatway) completo (os sensores de serviços diferentes devem ser implementados como características independentes de serviços independentes) :: meu PC é o GATT Client e a pulseira é o GATT Server.
+- Implementar scanner contínuo.
 
 ## Install dependencies
 ```

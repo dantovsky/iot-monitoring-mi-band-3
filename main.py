@@ -13,9 +13,6 @@ import time
 # Object instatiation
 rabbit = rabbitmq.RabbitMQ()
 
-# Scanning for Mi Band 3 near aroud :: returns an array of MAC addresses
-bands = getMiBand()
-
 print('\n» Getting data from Mi Band 3...')
 
 def sleep(t):
@@ -27,6 +24,9 @@ def sleep(t):
         t -= 1
 
 while True:
+    # Scanning for Mi Band 3 near around :: returns an array of MAC addresses
+    bands = getMiBand()
+
     # Loop each Mi Band 3 MAC Address and connect them to get data: "steps", "battery info", and "heart rate in real time"
     for band in bands:
         rabbit_messages = {}
@@ -75,4 +75,4 @@ while True:
 
         rabbit.connectionClose()
 
-        sleep(35)
+    sleep(30)

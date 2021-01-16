@@ -1,5 +1,16 @@
 # IoT Mini Project » Bluetooth BLE
 
+``` 
+---------------------------------------------------------------------------
+UA -> ESTGA -> MIA -> Tecnologias de Comunicação para a Internet das Coisas
+Professor: Pedro Gonçalves
+Estudante: Dante Marinho
+---------------------------------------------------------------------------
+```
+
+![IoT Mini Project » Bluetooth BLE - print-program-running.png](images/print-program-running.png)
+
+
 ![IoT Mini Project » Bluetooth BLE - RabbitMQ Overview](images/rabbit-overview.png)
 
 Desenvolvimento de uma solução de IoT para a monitorização das atividades de uma pulseira Mi Band 3.
@@ -30,23 +41,27 @@ Desenvolvimento de uma solução de IoT para a monitorização das atividades de
 pip3 install -r requirements.txt
 ```
 
+Lista de dependências:
+```
+bluepy==1.3.0
+pika==1.1.0
+pycrypto==2.6.1
+certifi==2020.12.5
+chardet==4.0.0
+crypto==1.4.1
+idna==2.10
+Naked==0.1.31
+pycryptodome==3.9.9
+PyYAML==5.3.1
+requests==2.25.1
+shellescape==3.8.1
+urllib3==1.26.2
+```
 ## How to run the project
 
 ```
 sudo python3 main.py
 ```
-
-## Possible my Mi Band 3
-
-- e8:9e:71:e1:c6:eb
-- ce:66:3c:61:74:19
-
-## Tarefas a fazer
-
-- Thread que faça o Scanner (transpor o código do Scan para dentro de uma Thread)
-- É possivel le-la? Então lê e realiza utiliza uma MOM para manipular os dados
-    MOM: message oriented middleware
-
 
 ## Utilizades
 
@@ -83,7 +98,9 @@ https://pypi.org/project/bluepy/
 
 ## Anotações
 
-Minha Mi Band 3: 'ce:66:3c:61:74:19'
+Minha Mi Band 3:  
+- e8:9e:71:e1:c6:eb
+- ce:66:3c:61:74:19 (1º Mac Address)
 
 O code para scanner da pulseira está na página 6 do ficheiro "Apresent8 - BLE Dev.pdf"
 Working with notifications (página 7) é para o pessoal que vai usar Arduino
@@ -97,3 +114,19 @@ file_name = 'miband-mac-address.txt'
     if not len(mibands_from_file):
         print('You don\'t have any Mi Band 3 setted in {}.'.format(file_name))
 ```
+
+Tarefas sugeridas
+
+- Thread que faça o Scanner (transpor o código do Scan para dentro de uma Thread)
+- É possivel le-la? Então lê e realiza utiliza uma MOM (Message Oriented Middleware) para manipular os dados
+
+## Virtual envirementes em Pythons
+
+-  Criação de venv  
+python3 -m venv .venv  
+
+- Ativar a venv
+. .venv/bin/activate  
+
+- Desativar a venv
+deactivate (para desativar o venv)  

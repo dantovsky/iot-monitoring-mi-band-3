@@ -5,7 +5,7 @@ import time
 import datetime
 
 ''' ---------------------------------------------------
-    This script- is the main file for TCIC Mini Project
+    This script is the main file for TCIC Mini Project
     Professor: Pedro Gonçalves
     Student: Dante Marinho
     ---------------------------------------------------
@@ -32,11 +32,10 @@ def send_to_mom(rabbit_messages):
     for queue, msg in rabbit_messages.items():
         rabbit.queue_declare(queue)
         rabbit.send(queue, str(msg))
-        # print(msg)
 
     rabbit.connectionClose()
 
-def set_new_datetime_to_band(band):
+def set_new_datetime_to_stored_band_mac_address(band):
     recent_bands_readed[band] = datetime.datetime.now()
 
 def get_mi_band_infos(band):
@@ -78,22 +77,17 @@ def get_mi_band_infos(band):
 
     mi_band.disconnect()
     send_to_mom(rabbit_messages)
-    set_new_datetime_to_band(band)
+    set_new_datetime_to_stored_band_mac_address(band)
 
 while True:
-    # Scanning for Mi Band 3 near around :: returns an array of MAC addresses
-    bands = getMiBand()
+    bands = getMiBand()  # Scanning for Mi Band 3 near around :: returns an array of MAC addresses
 
     # Loop each Mi Band 3 MAC Address and connect them to get data: "steps", "battery info", and "heart rate in real time"
     for band in bands:
-        # rabbit_messages = {}
         date_now = datetime.datetime.now()
-
-        # Verify if the Mi Band has recent info stored
-        if band in recent_bands_readed:
+        if band in recent_bands_readed:  # Verify if has recent info stored for this Mi Band
             # Verify if was get info more then 5 minutes
             time_elapsed_last_info = date_now - recent_bands_readed[band]
-            # print('time_elapsed_last_info.total_seconds() :: ', time_elapsed_last_info.total_seconds())
             if (time_elapsed_last_info.total_seconds() / 60 > minutes_to_update_band_info):
                 print('» Updating Mi Band ({}) infos.'.format(band))
                 get_mi_band_infos(band)

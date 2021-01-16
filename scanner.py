@@ -16,7 +16,7 @@ class ScanDelegate(DefaultDelegate):
             
 
 def getMiBand():
-    print ('\nScannig for Mi Bands 3 devices...\n')
+    print ('\n\nScannig for Mi Bands 3 devices...\n')
     scanner = Scanner().withDelegate(ScanDelegate())
     devices = scanner.scan(5.0)
 

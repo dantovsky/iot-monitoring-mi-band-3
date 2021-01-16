@@ -300,12 +300,12 @@ class MiBand3(Peripheral):
         res = None
         numCicle = 0
         securyLimitCicle = 35
-        print ('\nReading heart rate')
+        print ('\n» Reading heart rate...')
         while not res:
             self.waitForNotifications(self.timeout)
             res = self._get_from_queue(QUEUE_TYPES.HEART)
 
-            # Condition to avoid infinite loop
+            # Condition to avoid infinite waiting
             numCicle = numCicle + 1
             if (numCicle >= securyLimitCicle):
                 self._char_heart_ctrl.write(b'\x15\x02\x00', True)  # stop manual                

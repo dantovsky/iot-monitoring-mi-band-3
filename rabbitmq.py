@@ -14,7 +14,7 @@ class RabbitMQ:
 
 
     def connection_rabbitmq(self):
-        print('Connecting to RabbitMQ Server...')
+        print('\nConnecting to RabbitMQ Server...')
         self.connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))  # Establish a connection with RabbitMQ server.
         self.channel = self.connection.channel()
         print('Connected to RabbitMQ Server')
@@ -30,7 +30,7 @@ class RabbitMQ:
 
     def connectionClose(self):
         self.connection.close()
-        print('RabbitMQ connection closed.')
+        print('RabbitMQ connection closed\n')
 
     
     # ------------------------------------------------------ #

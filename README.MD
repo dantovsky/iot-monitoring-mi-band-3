@@ -6,10 +6,9 @@ UA -> ESTGA -> MIA -> Tecnologias de Comunicação para a Internet das Coisas
 Professor: Pedro Gonçalves
 Estudante: Dante Marinho
 ---------------------------------------------------------------------------
+```
 
 Link deste projeto: https://github.com/dantovsky/iot-monitoring-mi-band-3
-
-```
 
 ## Sobre o projeto
 

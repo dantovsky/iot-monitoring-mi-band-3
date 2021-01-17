@@ -8,16 +8,27 @@ Estudante: Dante Marinho
 ---------------------------------------------------------------------------
 ```
 
+## Sobre o projeto
+
+No âmbito da disciplina de Tecnologias de Comunicação para a Internet das Coisas, foi proposto um mini projeto que consistia no desenvolvimento de uma solução IoT (Internet of Things) para a monitorização de um dispositivo BLE (Bluetooth Low Energy).
+
+O presente trabalho utilizou um pulseira Xiaomi Mi Band 3 para alcançar os seguintes objetivos:
+- Monitorizar número de passos;
+- Monitorizar a bateria;
+- Monitorizar batimentos cardíacos;
+- Estabelecimento de mecanismos de poupança de bateria.
+
+Adicionalmente, o trabalho inclui a implementação de um servidor de GATT (Generic Attribute Profile) e a utilização de um MOM (Message-oriented Middleware), tendo sido utilizado o RabbitMQ.
+
+### Prints do programa a correr
+
 ![IoT Mini Project » Bluetooth BLE - print-program-running.png](images/print-program-running.png)
 
+### RabbitMQ - Overview
 
 ![IoT Mini Project » Bluetooth BLE - RabbitMQ Overview](images/rabbit-overview.png)
 
-Desenvolvimento de uma solução de IoT para a monitorização das atividades de uma pulseira Mi Band 3.
-- Monitorizar número de passos.
-- Monitorizar a bateria.
-- Monitorizar batimentos cardíacos.
-- Estabelecimento de mecanismos de poupança de bateria.
+### RabitMQ - Queues
 
 ![IoT Mini Project » Bluetooth BLE - RabbitMQ Queues](images/rabbit-queues.png)
 
@@ -37,6 +48,8 @@ Desenvolvimento de uma solução de IoT para a monitorização das atividades de
 - Implementar scanner contínuo.
 
 ## Preparação do ambiente
+
+O programa foi desenvolvido utilizando o sistema Linux Neon e Python 3.8.5.
 
 1. Instalar o RabbitMQ
 sudo apt install rabbitmq-server
@@ -58,13 +71,26 @@ Em caso de problema de instalação do bluepy, installar:
 sudo apt-get install libglib2.0-dev python3-dev  
 https://stackoverflow.com/questions/46918646/bluepy-installation-error
 
+Poderá também instalar um virtual env na pasta raiz do programa em Python e instalar as dependências do "requirements.txt" no .venv.
+
+### Como criar um virtual envirements (.venv) em Python
+
+-  Criação de venv  
+python3 -m venv .venv  
+
+- Ativar a venv
+. .venv/bin/activate  
+
+- Desativar a venv
+deactivate (para desativar o venv) 
+
 ## How to run the project
 
 ```
 sudo python3 main.py
 ```
 
-## Utilizades
+## Utilidades
 
 - restart Bluetooth from terminal
 ```
@@ -150,8 +176,8 @@ bluepy.btle.BTLEDisconnectError: Device disconnected
 ## Anotações
 
 Mac Adresses da f6:9e:71:df:3a:ca da minha Mi Band 3:  
-- f6:9e:71:df:3a:ca
-- e8:9e:71:e1:c6:eb
+- f6:9e:71:df:3a:ca (3º Mac Address)
+- e8:9e:71:e1:c6:eb (2º Mac Address)
 - ce:66:3c:61:74:19 (1º Mac Address)
 
 O code para scanner da pulseira está na página 6 do ficheiro "Apresent8 - BLE Dev.pdf"
@@ -170,15 +196,4 @@ file_name = 'miband-mac-address.txt'
 Tarefas sugeridas
 
 - Thread que faça o Scanner (transpor o código do Scan para dentro de uma Thread)
-- É possivel le-la? Então lê e realiza utiliza uma MOM (Message Oriented Middleware) para manipular os dados
-
-## Virtual envirementes em Pythons
-
--  Criação de venv  
-python3 -m venv .venv  
-
-- Ativar a venv
-. .venv/bin/activate  
-
-- Desativar a venv
-deactivate (para desativar o venv)  
+- É possivel le-la? Então lê e realiza utiliza uma MOM (Message Oriented Middleware) para manipular os dados 

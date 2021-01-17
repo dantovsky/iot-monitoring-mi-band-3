@@ -13,8 +13,9 @@ import datetime
 
 # RabbitMQ object instatiation
 rabbit = rabbitmq.RabbitMQ()
-recent_bands_readed = {}
-minutes_to_update_band_info = 3  # minutes
+recent_bands_readed = {}  # recent Mi Bands 3 readed
+minutes_to_update_band_info = 60  # minutes
+seconds_to_sleep = 30  # seconds
 
 print('\n» Getting data from Mi Band 3...')
 
@@ -66,6 +67,7 @@ def get_mi_band_infos(band):
     print('\n', battery)
 
     # Heart Rate
+    print ('\n» Reading heart rate...')
     heart_data = mi_band.get_heart_rate_one_time()
     heart = {}
     heart['queue'] = 'heart'
@@ -98,4 +100,4 @@ while True:
             print('» Getting Mi Band ({}) infos.'.format(band))
             get_mi_band_infos(band)
 
-    sleep(30)
+    sleep(seconds_to_sleep)

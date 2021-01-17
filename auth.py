@@ -227,7 +227,7 @@ class MiBand3(Peripheral):
             self._log.error(self.state)
             return False
 
-    ### Precisa deste
+    # Using for TCIC project - Leitura das infos da bateria
     def get_battery_info(self):
         char = self.svc_1.getCharacteristics(UUIDS.CHARACTERISTIC_BATTERY)[0]        
         return self._parse_battery_response(char.read())
@@ -300,7 +300,6 @@ class MiBand3(Peripheral):
         res = None
         numCicle = 0
         securyLimitCicle = 35
-        print ('\n» Reading heart rate...')
         while not res:
             self.waitForNotifications(self.timeout)
             res = self._get_from_queue(QUEUE_TYPES.HEART)
@@ -308,7 +307,7 @@ class MiBand3(Peripheral):
             # Condition to avoid infinite waiting
             numCicle = numCicle + 1
             if (numCicle >= securyLimitCicle):
-                self._char_heart_ctrl.write(b'\x15\x02\x00', True)  # stop manual                
+                self._char_heart_ctrl.write(b'\x15\x02\x00', True)  # stop manual             
 
         rate = struct.unpack('bb', res)[1]
 

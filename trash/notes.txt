@@ -1,0 +1,15 @@
+Possíveis dependências:
+
+bluepy==1.3.0
+pika==1.1.0
+pycrypto==2.6.1
+certifi==2020.12.5
+chardet==4.0.0
+crypto==1.4.1
+idna==2.10
+Naked==0.1.31
+pycryptodome==3.9.9
+PyYAML==5.3.1
+requests==2.25.1
+shellescape==3.8.1
+urllib3==1.26.2
